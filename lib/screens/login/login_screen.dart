@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xlo/blocs/login/field_state.dart';
 import 'package:xlo/blocs/login/login_bloc.dart';
+import 'package:xlo/screens/login/widgets/facebook_button.dart';
 import 'package:xlo/screens/login/widgets/login_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -24,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              FacebookButton(_loginBloc),
               Padding(
                 padding: const EdgeInsets.only(top: 20, bottom: 11),
                 child: Text(
@@ -52,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     autocorrect: false,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                      errorText: snapshot.data.errorText,
+                      errorText: snapshot.data.error,
                       enabled: snapshot.data.enabled
                     ),
                   );
@@ -90,12 +92,30 @@ class _LoginScreenState extends State<LoginScreen> {
                     autocorrect: false,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                        errorText: snapshot.data.errorText,
+                        errorText: snapshot.data.error,
                         enabled: snapshot.data.enabled),
                   );
                 },
               ),
-              LoginButton()
+              LoginButton(_loginBloc),
+              Divider(color: Colors.grey,),
+              Padding(padding: EdgeInsets.symmetric(vertical: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Não tem conta? ",
+                  style: TextStyle(fontSize: 16)),
+                  GestureDetector(
+                    onTap: (){},
+                    child: Text("Cadastre-se",
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Colors.blue,
+                      fontSize: 16
+                    ),),
+                  )
+                ],
+              ),)
             ],
           ),
         ),

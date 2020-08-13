@@ -1,7 +1,7 @@
 class FieldState{
 
-  String errorText;
+  String error;
   bool enabled;
 
-  FieldState({this.errorText = null, this.enabled = true});
+  FieldState({this.error, this.enabled = true});
 }
