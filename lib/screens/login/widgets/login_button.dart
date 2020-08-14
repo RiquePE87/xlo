@@ -3,7 +3,6 @@ import 'package:xlo/blocs/login/button_state.dart';
 import 'package:xlo/blocs/login/login_bloc.dart';
 
 class LoginButton extends StatelessWidget {
-
   final LoginBloc loginBloc;
 
   LoginButton(this.loginBloc);
@@ -23,15 +22,22 @@ class LoginButton extends StatelessWidget {
             textColor: Colors.white,
             elevation: 0,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-            onPressed:snapshot.data.enabled ? () {
-              loginBloc.loginWithEmail();
-            } : null,
-            child: snapshot.data.loading ? CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ) : Text(
-              "Entrar",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
+            onPressed: snapshot.data.enabled
+                ? () async {
+                    final bool success = await loginBloc.loginWithEmail();
+                    if (success) {
+                      Navigator.of(context).pop();
+                    }
+                  }
+                : null,
+            child: snapshot.data.loading
+                ? CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  )
+                : Text(
+                    "Entrar",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
           );
         },
       ),

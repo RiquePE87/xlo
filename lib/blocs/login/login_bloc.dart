@@ -7,13 +7,14 @@ import 'package:xlo/validators/login_validator.dart';
 class LoginBloc with LoginValidator {
   final BehaviorSubject<String> _emailController = BehaviorSubject<String>();
   final BehaviorSubject<String> _passwordController = BehaviorSubject<String>();
-  final BehaviorSubject<LoginBlocState> _stateController = BehaviorSubject<LoginBlocState>.seeded(LoginBlocState(LoginState.IDLE));
+  final BehaviorSubject<LoginBlocState> _stateController =
+      BehaviorSubject<LoginBlocState>.seeded(LoginBlocState(LoginState.IDLE));
 
   Function(String) get changeEmail => _emailController.sink.add;
   Function(String) get changePassword => _passwordController.sink.add;
 
   Stream<FieldState> get outEmail =>
-      Rx.combineLatest2(_emailController.stream.transform(emailValidator), outState, (a, b){
+      Rx.combineLatest2(_emailController.stream.transform(emailValidator), outState, (a, b) {
         a.enabled = b.state != LoginState.LOADING;
         return a;
       });
@@ -23,22 +24,32 @@ class LoginBloc with LoginValidator {
         return a;
       });
   Stream<LoginBlocState> get outState => _stateController.stream;
-  
-  Stream<ButtonState> get outButtonState => Rx.combineLatest3(outEmail, outPassword, outState, (a, b, c) {
-    return ButtonState(
-      loading: c.state == LoginState.LOADING,
-      enabled: a.error == null && b.error == null && c.state != LoginState.LOADING
-    );
 
-  });
-  
-  void loginWithEmail() async{
+  Stream<ButtonState> get outButtonState =>
+      Rx.combineLatest3(outEmail, outPassword, outState, (a, b, c) {
+        return ButtonState(
+            loading: c.state == LoginState.LOADING,
+            enabled: a.error == null && b.error == null && c.state != LoginState.LOADING);
+      });
+
+  Future<bool> loginWithEmail() async {
     _stateController.add(LoginBlocState(LoginState.LOADING));
 
     await Future.delayed(Duration(seconds: 3));
 
     _stateController.add(LoginBlocState(LoginState.DONE));
 
+    return true;
+  }
+
+  Future<bool> loginWithFacebook() async {
+    _stateController.add(LoginBlocState(LoginState.LOADING_FACE));
+
+    await Future.delayed(Duration(seconds: 3));
+
+    _stateController.add(LoginBlocState(LoginState.DONE));
+
+    return true;
   }
 
   void dispose() {

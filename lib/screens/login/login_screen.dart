@@ -3,6 +3,8 @@ import 'package:xlo/blocs/login/field_state.dart';
 import 'package:xlo/blocs/login/login_bloc.dart';
 import 'package:xlo/screens/login/widgets/facebook_button.dart';
 import 'package:xlo/screens/login/widgets/login_button.dart';
+import 'package:xlo/screens/login/widgets/or_divider.dart';
+import 'package:xlo/screens/signup/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -10,7 +12,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   final LoginBloc _loginBloc = LoginBloc();
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               FacebookButton(_loginBloc),
+              OrDivider(),
               Padding(
                 padding: const EdgeInsets.only(top: 20, bottom: 11),
                 child: Text(
@@ -38,10 +40,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.only(left: 3, bottom: 4),
                 child: Text(
                   "E-mail",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[800],
-                      fontWeight: FontWeight.w700),
+                  style:
+                      TextStyle(fontSize: 16, color: Colors.grey[800], fontWeight: FontWeight.w700),
                 ),
               ),
               StreamBuilder<FieldState>(
@@ -54,9 +54,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     autocorrect: false,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                      errorText: snapshot.data.error,
-                      enabled: snapshot.data.enabled
-                    ),
+                        errorText: snapshot.data.error,
+                        enabled: snapshot.data.enabled),
                   );
                 },
               ),
@@ -68,9 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         "Senha",
                         style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[800],
-                            fontWeight: FontWeight.w700),
+                            fontSize: 16, color: Colors.grey[800], fontWeight: FontWeight.w700),
                       ),
                     ),
                     GestureDetector(
@@ -98,24 +95,29 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
               LoginButton(_loginBloc),
-              Divider(color: Colors.grey,),
-              Padding(padding: EdgeInsets.symmetric(vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Não tem conta? ",
-                  style: TextStyle(fontSize: 16)),
-                  GestureDetector(
-                    onTap: (){},
-                    child: Text("Cadastre-se",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Colors.blue,
-                      fontSize: 16
-                    ),),
-                  )
-                ],
-              ),)
+              Divider(
+                color: Colors.grey,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Não tem conta? ", style: TextStyle(fontSize: 16)),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) => SignUpScreen()));
+                      },
+                      child: Text(
+                        "Cadastre-se",
+                        style: TextStyle(
+                            decoration: TextDecoration.underline, color: Colors.blue, fontSize: 16),
+                      ),
+                    )
+                  ],
+                ),
+              )
             ],
           ),
         ),
