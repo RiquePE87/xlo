@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xlo/screens/signup/widgets/field_title.dart';
+import 'package:xlo/screens/signup/widgets/password_field.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -32,8 +33,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   return null;
                 }
               },
-              decoration:
-                  InputDecoration(border: OutlineInputBorder(), hintText: "Exemplo João S."),
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(), hintText: "Exemplo João S."),
+              onSaved: (text) {},
+            ),
+            const SizedBox(
+              height: 26,
             ),
             const FieldTitle(
               title: "E-mail",
@@ -48,14 +53,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 }
               },
               decoration: InputDecoration(border: OutlineInputBorder()),
+              onSaved: (text) {},
+            ),
+            const SizedBox(
+              height: 26,
             ),
             const FieldTitle(
               title: "Senha",
               subtitle: "Use números, letras e caracteres especiais.",
+            ),
+            PasswordField(
+              onSaved: (text) {},
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 24),
+              height: 50,
+              child: RaisedButton(
+                color: Colors.pink,
+                disabledColor: Colors.pink.withAlpha(150),
+                child: Text("Cadastre-se", style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600
+                ),),
+                onPressed: _signUp,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),),
             )
           ],
         ),
       ),
     );
+  }
+  void _signUp(){
+    if (_formKey.currentState.validate()){
+      _formKey.currentState.save();
+    }
   }
 }
