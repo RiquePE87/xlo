@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class PasswordField extends StatelessWidget {
-
   final FormFieldSetter onSaved;
+  final bool enabled;
 
-  PasswordField({this.onSaved});
+  PasswordField({this.onSaved, this.enabled});
   @override
   Widget build(BuildContext context) {
     Widget buildBar(int n, String pass) {
@@ -20,12 +20,13 @@ class PasswordField extends StatelessWidget {
     }
 
     return FormField<String>(
-      onSaved: onSaved,
+        onSaved: onSaved,
+        enabled: enabled,
         initialValue: "",
-        validator: (text){
-          if (text.isEmpty || _calcScore(text) > 2){
+        validator: (text) {
+          if (text.isEmpty || _calcScore(text) > 2) {
             return "Senha inválida";
-          }else{
+          } else {
             return null;
           }
         },
@@ -39,28 +40,29 @@ class PasswordField extends StatelessWidget {
                 decoration: InputDecoration(border: OutlineInputBorder()),
               ),
               if (state.value.isNotEmpty)
-              Container(
-                height: 8,
-                margin: const EdgeInsets.only(top: 6),
-                child: Row(
-                  children: [
-                    buildBar(0, state.value),
-                    buildBar(1, state.value),
-                    buildBar(2, state.value),
-                    buildBar(3, state.value),
-                  ],
+                Container(
+                  height: 8,
+                  margin: const EdgeInsets.only(top: 6),
+                  child: Row(
+                    children: [
+                      buildBar(0, state.value),
+                      buildBar(1, state.value),
+                      buildBar(2, state.value),
+                      buildBar(3, state.value),
+                    ],
+                  ),
                 ),
-              ),
               Padding(
                 padding: const EdgeInsets.only(top: 6, left: 10),
-                child: state.value.isNotEmpty || state.hasError ? Text(
-                  state.value.isNotEmpty ? _getText(_calcScore(state.value)) : state.errorText,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: _getColor(_calcScore(state.value))
-                  ),
-                ) : Container(),
+                child: state.value.isNotEmpty || state.hasError
+                    ? Text(
+                        state.value.isNotEmpty
+                            ? _getText(_calcScore(state.value))
+                            : state.errorText,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(fontSize: 12, color: _getColor(_calcScore(state.value))),
+                      )
+                    : Container(),
               ),
             ],
           );
