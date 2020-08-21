@@ -22,10 +22,10 @@ class ImagesField extends StatelessWidget {
                         onTap: () {
                           showModalBottomSheet(
                               context: context,
-                              builder: (context) => ImageSourceSheet((image){
-                                state.didChange(state.value..add(image));
-                                Navigator.of(context).pop();
-                              }));
+                              builder: (context) => ImageSourceSheet((image) {
+                                    state.didChange(state.value..add(image));
+                                    Navigator.of(context).pop();
+                                  }));
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(
@@ -52,28 +52,30 @@ class ImagesField extends StatelessWidget {
                       );
                     }
                     return GestureDetector(
-                      onTap: (){
-                        showDialog(context: context,
-                        builder: (context) => Dialog(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Image.file(state.value[index]),
-                              FlatButton(
-                                child: Text("Excluir"),
-                                textColor: Colors.red,
-                                onPressed: (){
-                                  state.didChange(state.value..removeAt(index));
-                                  Navigator.of(context).pop();
-                                },
-                              )
-                            ],
-                          ),
-
-                        ));
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) => Dialog(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Image.file(state.value[index]),
+                                      FlatButton(
+                                        child: Text("Excluir"),
+                                        textColor: Colors.red,
+                                        onPressed: () {
+                                          state.didChange(
+                                              state.value..removeAt(index));
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ));
                       },
-                      child: Padding(padding: const EdgeInsets.only(
-                          left: 16, top: 16, bottom: 16),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 16, top: 16, bottom: 16),
                         child: CircleAvatar(
                           radius: 52,
                           backgroundImage: FileImage(state.value[index]),
