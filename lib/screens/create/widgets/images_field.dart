@@ -3,10 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:xlo/screens/create/widgets/image_source_sheet.dart';
 
 class ImagesField extends StatelessWidget {
+  final FormFieldSetter onSaved;
+  final List initialValue;
+
+  ImagesField({this.onSaved, this.initialValue});
+
   @override
   Widget build(BuildContext context) {
     return FormField<List>(
-      initialValue: [],
+      initialValue: initialValue,
+      onSaved: onSaved,
+      validator: (images) {
+        if (images.isEmpty) {
+          return "Campo obrigatório";
+        } else {
+          return null;
+        }
+      },
       builder: (state) {
         return Column(
           children: [
@@ -22,14 +35,13 @@ class ImagesField extends StatelessWidget {
                         onTap: () {
                           showModalBottomSheet(
                               context: context,
-                              builder: (context) => ImageSourceSheet((image){
-                                state.didChange(state.value..add(image));
-                                Navigator.of(context).pop();
-                              }));
+                              builder: (context) => ImageSourceSheet((image) {
+                                    state.didChange(state.value..add(image));
+                                    Navigator.of(context).pop();
+                                  }));
                         },
                         child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, top: 16, bottom: 16),
+                          padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
                           child: CircleAvatar(
                             backgroundColor: Colors.grey[300],
                             radius: 52,
@@ -52,28 +64,28 @@ class ImagesField extends StatelessWidget {
                       );
                     }
                     return GestureDetector(
-                      onTap: (){
-                        showDialog(context: context,
-                        builder: (context) => Dialog(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Image.file(state.value[index]),
-                              FlatButton(
-                                child: Text("Excluir"),
-                                textColor: Colors.red,
-                                onPressed: (){
-                                  state.didChange(state.value..removeAt(index));
-                                  Navigator.of(context).pop();
-                                },
-                              )
-                            ],
-                          ),
-
-                        ));
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) => Dialog(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Image.file(state.value[index]),
+                                      FlatButton(
+                                        child: Text("Excluir"),
+                                        textColor: Colors.red,
+                                        onPressed: () {
+                                          state.didChange(state.value..removeAt(index));
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ));
                       },
-                      child: Padding(padding: const EdgeInsets.only(
-                          left: 16, top: 16, bottom: 16),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
                         child: CircleAvatar(
                           radius: 52,
                           backgroundImage: FileImage(state.value[index]),
@@ -81,7 +93,16 @@ class ImagesField extends StatelessWidget {
                       ),
                     );
                   }),
-            )
+            ),
+            if (state.hasError)
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(
+                  state.errorText,
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              )
           ],
         );
       },
