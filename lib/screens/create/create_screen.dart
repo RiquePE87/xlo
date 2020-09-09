@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:xlo/api/api_postalcode.dart';
 import 'package:xlo/common/cep_field.dart';
 import 'package:xlo/common/custom_drawer/custom_drawer.dart';
+import 'package:xlo/models/ad.dart';
+import 'package:xlo/screens/create/widgets/hide_phone_widget.dart';
 import 'package:xlo/screens/create/widgets/images_field.dart';
 
 class CreateScreen extends StatefulWidget {
@@ -13,6 +15,8 @@ class CreateScreen extends StatefulWidget {
 
 class _CreateScreenState extends State<CreateScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  Ad ad = Ad();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +31,7 @@ class _CreateScreenState extends State<CreateScreen> {
             children: [
               ImagesField(
                 onSaved: (images) {
-                  print(images);
+                 ad.images = images;
                 },
                 initialValue: [],
               ),
@@ -41,7 +45,9 @@ class _CreateScreenState extends State<CreateScreen> {
                   if (text.isEmpty) return "Campo obrigatório";
                   return null;
                 },
-                onSaved: (t) {},
+                onSaved: (t) {
+                  ad.title = t;
+                },
               ),
               TextFormField(
                 maxLines: null,
@@ -55,13 +61,19 @@ class _CreateScreenState extends State<CreateScreen> {
                   if (text.trim().length < 10) return "Texto muito curto";
                   return null;
                 },
-                onSaved: (t) {},
+                onSaved: (d) {
+                  ad.description = d;
+                },
               ),
               CepField(
                 decoration: InputDecoration(labelText: "CEP *",
                     contentPadding: const EdgeInsets.fromLTRB(16, 10, 12, 10),
                     labelStyle:
                     TextStyle(fontWeight: FontWeight.w800, color: Colors.grey, fontSize: 18)),
+                onSaved: (c){
+                  ad.address = c;
+
+                }
               ),
               TextFormField(
                 keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
@@ -76,18 +88,28 @@ class _CreateScreenState extends State<CreateScreen> {
                         TextStyle(fontWeight: FontWeight.w800, color: Colors.grey, fontSize: 18)),
                 validator: (text) {
                   if (text.trim().isEmpty) return "Campo obrigatório";
-                  if (double.tryParse(text) == null) return "Utilize Valores Válidos";
+                  if (int.tryParse(getSanitizedText(text)) == null) return "Utilize Valores Válidos";
                   return null;
                 },
-                onSaved: (price) {},
+                onSaved: (price) {
+                  ad.price = int.parse(getSanitizedText(price)) / 100;
+                },
+              ),
+              HidePhoneWidget(
+                onSaved: (s){
+                  ad.hidePhone = s;
+
+                },
+                initialValue: false,
               ),
               Container(
                 height: 50,
                 child: RaisedButton(
                   onPressed: () {
-                    getAdressFromAPI("54.270-320");
                     if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
+
+                      print(ad);
                     }
                   },
                   color: Colors.pink,
@@ -101,5 +123,8 @@ class _CreateScreenState extends State<CreateScreen> {
             ],
           )),
     );
+  }
+  String getSanitizedText(String text){
+    return text.replaceAll(RegExp(r'[^\d]'), "");
   }
 }
