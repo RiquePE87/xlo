@@ -142,8 +142,8 @@ class _CreateScreenState extends State<CreateScreen> {
                       },
                     ),
                     HidePhoneWidget(
-                      onSaved: (s) {
-                        ad.hidePhone = s;
+                      onSaved: (h) {
+                        ad.hidePhone = h;
                       },
                       initialValue: false,
                     ),

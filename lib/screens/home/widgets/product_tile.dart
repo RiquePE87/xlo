@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:xlo/models/ad.dart';
+import 'package:xlo/screens/products/product_screen.dart';
 
 class ProductTile extends StatelessWidget {
   final Ad ad;
@@ -10,7 +11,11 @@ class ProductTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context)=> ProductScreen(ad))
+        );
+      },
       child: Container(
         height: 135,
         margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
